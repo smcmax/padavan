@@ -1,5 +1,6 @@
 SRC_NAME=mbedtls-2.28.10
 SRC_URL=https://github.com/Mbed-TLS/mbedtls/archive/v2.28.10.tar.gz
+SRC_DIR=mbedtls-mbedtls-2.28.10 # <-- 这是 GitHub 归档解压后可能的真实目录名
 
 all: download_test extract_test config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
@@ -12,6 +13,10 @@ download_test:
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
 		tar -xf $(SRC_NAME).tar.gz; \
+		# 关键修复：检查解压后的真实目录名，并将其重命名为我们期望的名称
+		if [ -d $(SRC_DIR) ] && [ ! -d $(SRC_NAME) ]; then \
+			mv $(SRC_DIR) $(SRC_NAME); \
+		fi; \
 	fi )
 
 config_test:
@@ -22,17 +27,11 @@ config_test:
 	fi )
 
 configure:
-	( \
-	echo "--------------------------------------------------"; \
-	echo "--- Diagnosing: Listing contents of $(SRC_NAME) ---"; \
-	ls -lR $(SRC_NAME); \
-	echo "--- Diagnosing: Searching for CMakeLists.txt ---"; \
-	find $(SRC_NAME) -name CMakeLists.txt; \
-	echo "--- Diagnosis complete. Proceeding with configure... ---"; \
-	echo "--------------------------------------------------"; \
-	mkdir -p $(SRC_NAME)/build && \
-	cd $(SRC_NAME)/build && \
-	cmake \
+	# 确保源码目录存在
+	( [ ! -d $(SRC_NAME) ] && echo "Source directory $(SRC_NAME) not found!" && exit 1 );
+	( mkdir -p $(SRC_NAME)/build && \
+	  cd $(SRC_NAME)/build && \
+	  cmake \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
 		-DCMAKE_TOOLCHAIN_FILE=$(CONFIG_CMAKE_TOOLCHAIN_FILE) \
@@ -46,8 +45,8 @@ configure:
 	)
 
 clean:
-	rm -rf $(SRC_NAME)/build
-	rm -f config_done
+	rm -rf $(SRC_NAME) $(SRC_DIR) # 清理所有可能的目录
+	rm -rf config_done
 
 install:
 	$(MAKE) -C $(SRC_NAME)/build install DESTDIR=""
