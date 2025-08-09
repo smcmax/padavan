@@ -75,7 +75,10 @@ jobs:
       - name: Prepare environment
         run: |
           sudo apt update
-          sudo apt install liblzo2-dev liblzma-dev libtool-bin gperf python3-docutils autopoint gettext ccache
+          sudo apt install unzip libtool-bin ccache curl cmake gperf gawk flex bison nano xxd \
+                            fakeroot kmod cpio git python3-docutils gettext automake autopoint \
+                            texinfo build-essential help2man pkg-config zlib1g-dev libgmp3-dev \
+                            liblzo2-dev liblzma-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget libc-dev-bin
       - name: Start Build
         run: |
           make ${{ inputs.target }}
