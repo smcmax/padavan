@@ -22,9 +22,17 @@ config_test:
 	fi )
 
 configure:
-	( mkdir -p $(SRC_NAME)/build && \
-	  cd $(SRC_NAME)/build && \
-	  cmake \
+	( \
+	echo "--------------------------------------------------"; \
+	echo "--- Diagnosing: Listing contents of $(SRC_NAME) ---"; \
+	ls -lR $(SRC_NAME); \
+	echo "--- Diagnosing: Searching for CMakeLists.txt ---"; \
+	find $(SRC_NAME) -name CMakeLists.txt; \
+	echo "--- Diagnosis complete. Proceeding with configure... ---"; \
+	echo "--------------------------------------------------"; \
+	mkdir -p $(SRC_NAME)/build && \
+	cd $(SRC_NAME)/build && \
+	cmake \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
 		-DCMAKE_TOOLCHAIN_FILE=$(CONFIG_CMAKE_TOOLCHAIN_FILE) \
