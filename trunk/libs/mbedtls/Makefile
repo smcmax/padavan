@@ -22,7 +22,7 @@ config_test:
 	fi )
 
 configure:
-	( mkdir -p $(SRC_NAME)/build && cd $(SRC_NAME)/build ; \
+	( mkdir -p $(SRC_NAME)/build && \cd $(SRC_NAME)/build && \
 	cmake -DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_PREFIX=$(STAGEDIR) \
 	-DCMAKE_TOOLCHAIN_FILE=$(CONFIG_CMAKE_TOOLCHAIN_FILE) \
