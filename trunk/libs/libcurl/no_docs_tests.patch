@@ -79,9 +79,9 @@ diff -urN curl-8.15.0-orig/configure.ac curl-8.15.0/configure.ac
 -  tests/libtest/Makefile \
 -  tests/unit/Makefile \
 -  tests/tunit/Makefile \
+-  tests/client/Makefile \
 -  tests/http/config.ini \
 -  tests/http/Makefile \
--  tests/http/clients/Makefile \
    packages/Makefile \
    packages/vms/Makefile \
    curl-config \
